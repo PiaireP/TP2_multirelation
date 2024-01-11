@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { MarqueVoitureModule } from './marque-voiture/marque-voiture.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
+import { ModelVoitureModule } from './model-voiture/model-voiture.module';
 
 @Module({
   imports: [
@@ -12,7 +13,7 @@ import { ConfigModule } from '@nestjs/config';
       envFilePath: '.env',
     }),
     MongooseModule.forRoot(process.env.MONGO_URI), 
-    MarqueVoitureModule
+    MarqueVoitureModule, ModelVoitureModule
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
     nestjs:
-        container_name: trading_pacpaf_nestjs
+        container_name: trading_pacpaf_nestjs_multi
         image: nestjs-api-dev:1.0.0
         build:
             context: .
@@ -21,7 +21,7 @@ services:
             - mongodb
 
     mongodb:
-        container_name: trading_pacpaf_mongodb
+        container_name: trading_pacpaf_mongodb_multi
         image: mongo:latest
         ports:
             - 27017:27017
