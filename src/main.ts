@@ -5,6 +5,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { WINSTON_MODULE_NEST_PROVIDER, WinstonModule } from 'nest-winston';
 import * as morgan from 'morgan';
 import 'winston-daily-rotate-file'
+import { MetricsMiddleware } from './metrics/metrics.middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -18,7 +19,7 @@ async function bootstrap() {
     stream: {
       write: (message) => logger.log(message),
     },
-  }));
+  },MetricsMiddleware));
   
   
   app.useGlobalPipes(new ValidationPipe(), );
