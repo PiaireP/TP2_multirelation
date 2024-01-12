@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, Logger } from '@nestjs/common';
 import { MarqueVoitureController } from './marque-voiture.controller';
 import { MarqueVoitureService } from './marque-voiture.service';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -13,6 +13,6 @@ import { ModelVoitureSchema } from 'src/schema/model-voiture.schema';
     ]),
   ],
   controllers: [MarqueVoitureController],
-  providers: [MarqueVoitureService]
+  providers: [MarqueVoitureService, Logger]
 })
 export class MarqueVoitureModule {}
