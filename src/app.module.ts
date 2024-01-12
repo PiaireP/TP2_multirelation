@@ -45,6 +45,7 @@ import * as DailyRotateFile from 'winston-daily-rotate-file';
   ],
   controllers: [AppController],
   providers: [AppService],
+  
 })
 
 export class AppModule {
