@@ -19,6 +19,8 @@ services:
         restart: unless-stopped
         depends_on:
             - mongodb
+        networks:
+            - api-network
 
     mongodb:
         container_name: trading_pacpaf_mongodb_multi
@@ -37,6 +39,49 @@ services:
             MONGO_PASSWORD: ${MONGO_PASSWORD}
             MONGO_DATABASE: ${MONGO_DATABASE}
         restart: unless-stopped
+        networks:
+            - api-network
+
+    prometheus:
+        container_name: TP2_Prom
+        image: prom/prometheus:latest
+        volumes:
+            - ./prometheus:/etc/prometheus
+            - ./prometheus_data:/prometheus
+        ports:
+            - 9090:9090
+        command: 
+            - '--config.file=/etc/prometheus/prometheus.yml'
+            - '--storage.tsdb.path=/prometheus'
+        depends_on:
+            - nestjs
+        restart: unless-stopped
+        networks:
+            - api-network
+
+    grafana:
+        container_name: trading_pacpaf_grafana
+        image: grafana/grafana-enterprise:latest
+        ports: 
+            - 3001:3000
+        env_file: .env
+        environment:
+            GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER}
+            GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
+        depends_on:
+            - prometheus
+        volumes:
+            - ./grafana/provisioning/:/etc/grafana/provisioning/
+            - ./grafana_data:/var/lib/grafana
+        restart: unless-stopped
+        networks:
+            - api-network
+
 
 volumes:
+    logs:
     mongodb_data:
+    prometheus_data:
+
+networks:
+    api-network:

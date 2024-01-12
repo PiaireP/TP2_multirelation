@@ -3,10 +3,8 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { WINSTON_MODULE_NEST_PROVIDER, WinstonModule } from 'nest-winston';
-import { transports, format } from 'winston';
 import * as morgan from 'morgan';
 import 'winston-daily-rotate-file'
-import { IncomingMessage, ServerResponse } from 'http';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

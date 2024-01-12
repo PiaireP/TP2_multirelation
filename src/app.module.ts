@@ -7,6 +7,9 @@ import { ConfigModule } from '@nestjs/config';
 import { ModelVoitureModule } from './model-voiture/model-voiture.module';
 // import { MyloggerMiddleware } from './mylogger/mylogger.middleware';
 import { WinstonModule } from 'nest-winston';
+import { MetricsService } from './metrics/metrics.service';
+import { MetricsController } from './metrics/metrics.controller';
+import { MetricsModule } from './metrics/metrics.module';
 import * as winston from 'winston';
 import * as DailyRotateFile from 'winston-daily-rotate-file';
 
@@ -38,7 +41,7 @@ import * as DailyRotateFile from 'winston-daily-rotate-file';
         ],
       }),
     MongooseModule.forRoot(process.env.MONGO_URI), 
-    MarqueVoitureModule, ModelVoitureModule
+    MarqueVoitureModule, ModelVoitureModule, MetricsModule
   ],
   controllers: [AppController],
   providers: [AppService],
