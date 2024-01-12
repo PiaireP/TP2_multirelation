@@ -2,35 +2,28 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { WinstonModule } from 'nest-winston';
+import { WINSTON_MODULE_NEST_PROVIDER, WinstonModule } from 'nest-winston';
 import { transports, format } from 'winston';
+import * as morgan from 'morgan';
 import 'winston-daily-rotate-file'
+import { IncomingMessage, ServerResponse } from 'http';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    logger: WinstonModule.createLogger({
-      transports: [
-        new transports.DailyRotateFile({
-          filename: `logs/%DATE%-allLevel.log`,
-          format: format.combine(format.timestamp(), format.json()),
-          datePattern: 'YYYY-MM-DD-HH',
-          zippedArchive: false,
-          maxFiles: '5d',
-        }),
-        new transports.Console({
-          format: format.combine(
-            format.cli(),
-            format.splat(),
-            format.timestamp(),
-            format.printf((info) => {
-              return `${info.timestamp} ${info.level}: ${info.message}`;
-            }),
-          ),
-        }),
-      ],
-    }),
-  });
-  app.useGlobalPipes(new ValidationPipe());
+  const app = await NestFactory.create(AppModule);
+
+  const logger = app.get(WINSTON_MODULE_NEST_PROVIDER)
+
+  app.useLogger(logger)
+
+  app.use(
+    morgan('combined', {
+    stream: {
+      write: (message) => logger.log(message),
+    },
+  }));
+  
+  
+  app.useGlobalPipes(new ValidationPipe(), );
   const config = new DocumentBuilder()
     .setTitle('Voiture API')
     .setDescription('UNe api pour gérer des références de marques de voiture')
@@ -38,6 +31,8 @@ async function bootstrap() {
     .addTag('voitures')
     .build();
   const document = SwaggerModule.createDocument(app, config);
+
+
   SwaggerModule.setup('api', app, document)
   await app.listen(3500);
 }
